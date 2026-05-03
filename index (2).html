@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Source Code Quiz — Wendy Lee-Chu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --black: #0a0806;
+    --dark: #110e09;
+    --card: #15110c;
+    --gold: #c9922a;
+    --gold-light: #e8b84b;
+    --gold-bright: #f5d07a;
+    --gold-dim: #7a5520;
+    --white: #f5ede0;
+    --white-dim: #c4b49a;
+    --border: rgba(201,146,42,0.35);
+    --border-bright: rgba(232,184,75,0.7);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--black);
+    color: var(--white);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Ambient background glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at center, rgba(201,146,42,0.08) 0%, rgba(180,100,10,0.04) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60vw;
+    height: 40vh;
+    background: radial-gradient(ellipse at center, rgba(201,146,42,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 16px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 24px 0 32px;
+  }
+
+  .brand-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.85;
+  }
+
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .ornament-line {
+    height: 1px;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold));
+  }
+  .ornament-line.right {
+    background: linear-gradient(90deg, var(--gold), var(--gold-dim), transparent);
+  }
+  .ornament svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--gold);
+    opacity: 0.9;
+  }
+
+  .quiz-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    background: linear-gradient(160deg, var(--gold-bright) 0%, var(--gold-light) 40%, var(--gold) 70%, var(--gold-dim) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  .quiz-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(11px, 2vw, 14px);
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .divider-line {
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-bright));
+  }
+  .divider-line.right {
+    background: linear-gradient(90deg, var(--border-bright), transparent);
+  }
+  .divider-diamond {
+    width: 7px;
+    height: 7px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .quiz-tagline {
+    font-size: clamp(16px, 3vw, 22px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.5;
+    max-width: 500px;
+    margin: 0 auto 12px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: linear-gradient(160deg, #1a1309 0%, #110e09 50%, #0d0b07 100%);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 48px 52px;
+    position: relative;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .card::before, .card::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: 0.6;
+  }
+  .card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .card::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  @media (max-width: 600px) {
+    .card { padding: 32px 24px; }
+  }
+
+  /* ── INTRO CARD ── */
+  .intro-text {
+    font-size: clamp(15px, 2.5vw, 19px);
+    font-weight: 400;
+    color: var(--white-dim);
+    line-height: 1.75;
+    text-align: center;
+  }
+  .intro-text strong {
+    color: var(--gold-light);
+    font-weight: 500;
+  }
+
+  .intro-meta {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 28px;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+  .intro-meta span { display: flex; align-items: center; gap: 8px; }
+  .intro-meta svg { width: 14px; height: 14px; fill: var(--gold); opacity: 0.7; }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    margin-bottom: 32px;
+    animation: fadeUp 0.4s ease both;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .progress-track {
+    height: 2px;
+    background: rgba(201,146,42,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold-light));
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--gold-bright);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--gold-light);
+  }
+
+  /* ── QUESTION ── */
+  .question-number {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+
+  .question-text {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(16px, 3vw, 22px);
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.5;
+    margin-bottom: 36px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 14px; }
+
+  .option-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 1px;
+    padding: 18px 24px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(201,146,42,0.06) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .option-btn:hover {
+    border-color: var(--gold);
+    transform: translateX(4px);
+    box-shadow: -4px 0 0 var(--gold), 0 0 20px rgba(201,146,42,0.1);
+  }
+  .option-btn:hover::before { opacity: 1; }
+
+  .option-btn.selected {
+    border-color: var(--gold-light);
+    background: linear-gradient(90deg, rgba(201,146,42,0.12) 0%, rgba(201,146,42,0.04) 100%);
+    box-shadow: -4px 0 0 var(--gold-light), 0 0 30px rgba(201,146,42,0.15);
+  }
+  .option-btn.selected::before { opacity: 1; }
+
+  .option-letter {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    min-width: 20px;
+    margin-top: 2px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+  .option-btn:hover .option-letter,
+  .option-btn.selected .option-letter { opacity: 1; }
+
+  .option-text {
+    font-size: clamp(14px, 2.5vw, 17px);
+    color: var(--white-dim);
+    line-height: 1.55;
+    font-weight: 300;
+    transition: color 0.2s;
+  }
+  .option-btn:hover .option-text,
+  .option-btn.selected .option-text { color: var(--white); }
+
+  /* ── BUTTONS ── */
+  .btn-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+
+  .btn-gold {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-light) 40%, var(--gold) 100%);
+    border: none;
+    padding: 18px 52px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-bright) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-gold:hover::before { opacity: 1; }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,146,42,0.4); }
+  .btn-gold:active { transform: translateY(0); }
+  .btn-gold span { position: relative; z-index: 1; }
+
+  .btn-ghost {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    background: transparent;
+    border: 1px solid var(--gold-dim);
+    padding: 14px 36px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .btn-ghost:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* ── RESULT ── */
+  .result-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .result-archetype {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .result-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(22px, 5vw, 38px);
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    background: linear-gradient(160deg, var(--gold-bright), var(--gold-light), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .result-tagline {
+    font-size: clamp(15px, 2.5vw, 19px);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--white-dim);
+    line-height: 1.6;
+  }
+
+  .result-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 28px 0;
+  }
+  .result-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-bright));
+  }
+  .result-divider-line.r {
+    background: linear-gradient(90deg, var(--border-bright), transparent);
+  }
+  .result-divider-icon { font-size: 18px; color: var(--gold); }
+
+  .result-body {
+    font-size: clamp(15px, 2.5vw, 18px);
+    font-weight: 300;
+    color: var(--white-dim);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .result-body strong { color: var(--gold-light); font-weight: 500; font-style: italic; }
+
+  .result-traits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 28px 0;
+  }
+  .trait-pill {
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+    text-align: center;
+    position: relative;
+  }
+  .trait-pill::before, .trait-pill::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--gold-dim);
+    border-style: solid;
+    opacity: 0.5;
+  }
+  .trait-pill::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+  .trait-pill::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+  .trait-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .trait-value {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--white);
+  }
+
+  .cta-section {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 36px;
+    border-top: 1px solid var(--border);
+  }
+  .cta-headline {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(14px, 2.5vw, 18px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+  .cta-body {
+    font-size: 16px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--white-dim);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btn-row-gap { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── NAV ROW (back + next) ── */
+  .btn-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .btn-back {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 0;
+    transition: color 0.2s;
+  }
+  .btn-back:hover { color: var(--gold); }
+
+  /* ── HALO GRAPHIC ── */
+  .halo {
+    margin: 0 auto 16px;
+    position: relative;
+  }
+  .halo-lg { width: 140px; height: 140px; }
+  .halo-md { width: 110px; height: 110px; }
+  .halo-sm { width: 80px;  height: 80px;  }
+  .halo svg { display: block; }
+</style>
+<script>
+  // Build halo SVGs on page load using precise trigonometry
+  function buildHalo(el) {
+    const size = el.classList.contains('halo-lg') ? 140 : el.classList.contains('halo-md') ? 110 : 80;
+    const cx = size / 2, cy = size / 2;
+    const r = size * 0.385;        // ring radius
+    const tickCount = 24;
+    const tickInner = r + size * 0.03;
+    const tickOuter = r + size * 0.115;
+    const arrowW = size * 0.028;
+
+    let ticks = '';
+    for (let i = 0; i < tickCount; i++) {
+      const angle = (i / tickCount) * Math.PI * 2 - Math.PI / 2;
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+
+      // Stem
+      const x1 = cx + cos * tickInner, y1 = cy + sin * tickInner;
+      const x2 = cx + cos * tickOuter, y2 = cy + sin * tickOuter;
+
+      // Arrow head (two lines from tip)
+      const perpAngle = angle + Math.PI / 2;
+      const ax = x2 - cos * size * 0.06, ay = y2 - sin * size * 0.06;
+      const lx = ax + Math.cos(perpAngle) * arrowW, ly = ay + Math.sin(perpAngle) * arrowW;
+      const rx2 = ax - Math.cos(perpAngle) * arrowW, ry2 = ay - Math.sin(perpAngle) * arrowW;
+
+      ticks += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="#e8b84b" stroke-width="${(size*0.009).toFixed(2)}" stroke-opacity="0.85"/>`;
+      ticks += `<line x1="${lx.toFixed(2)}" y1="${ly.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="#e8b84b" stroke-width="${(size*0.007).toFixed(2)}" stroke-opacity="0.8"/>`;
+      ticks += `<line x1="${rx2.toFixed(2)}" y1="${ry2.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="#e8b84b" stroke-width="${(size*0.007).toFixed(2)}" stroke-opacity="0.8"/>`;
+    }
+
+    const sw = (size * 0.013).toFixed(2);
+    el.innerHTML = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
+      <defs>
+        <radialGradient id="hg${size}" cx="50%" cy="50%" r="50%">
+          <stop offset="50%" stop-color="#c9922a" stop-opacity="0"/>
+          <stop offset="75%" stop-color="#c9922a" stop-opacity="0.22"/>
+          <stop offset="88%" stop-color="#e8b84b" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#7a5520" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="${cx}" cy="${cy}" r="${(size*0.49).toFixed(1)}" fill="url(#hg${size})"/>
+      <circle cx="${cx}" cy="${cy}" r="${(r+size*0.05).toFixed(1)}" fill="none" stroke="#c9922a" stroke-width="${(size*0.03).toFixed(2)}" stroke-opacity="0.12"/>
+      <circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="#e8b84b" stroke-width="${sw}" stroke-opacity="0.95"/>
+      <circle cx="${cx}" cy="${cy}" r="${(r-size*0.022).toFixed(1)}" fill="none" stroke="#c9922a" stroke-width="${(size*0.005).toFixed(2)}" stroke-opacity="0.4"/>
+      ${ticks}
+      <circle cx="${cx}" cy="${cy}" r="${(size*0.025).toFixed(1)}" fill="#f5d07a" fill-opacity="0.5"/>
+      <circle cx="${cx}" cy="${cy}" r="${(size*0.012).toFixed(1)}" fill="#ffffff" fill-opacity="0.8"/>
+    </svg>`;
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.halo').forEach(buildHalo);
+  });
+</script>
+<style>
+  .capture-field { display: flex; flex-direction: column; gap: 8px; }
+  .capture-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.85;
+  }
+  .capture-input {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 1px;
+    padding: 16px 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    width: 100%;
+  }
+  .capture-input::placeholder { color: rgba(196,180,154,0.4); }
+  .capture-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px rgba(201,146,42,0.2), 0 0 20px rgba(201,146,42,0.08);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 40px 0 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .footer-link, .eyebrow-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s;
+  }
+  .footer-link:hover, .eyebrow-link:hover { color: var(--gold-bright); }
+  .footer-link:active, .footer-link:visited,
+  .eyebrow-link:active, .eyebrow-link:visited { color: #f5ede0; text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  .animate-in { animation: fadeUp 0.55s ease both; }
+
+  /* Particle dots */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0;
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    0%   { opacity: 0; transform: translateY(0) scale(0); }
+    10%  { opacity: 0.4; }
+    90%  { opacity: 0.15; }
+    100% { opacity: 0; transform: translateY(-100vh) scale(1.5); }
+  }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container">
+
+  <!-- SCREEN 0: Intro -->
+  <div id="screen-intro">
+    <div class="header">
+      <div class="brand-eyebrow"><a href="https://www.skool.com/the-awakening-portal-6413/about" target="_blank" class="eyebrow-link">The Re-Awakening Portal</a></div>
+      <div class="halo halo-lg"></div>
+      <h1 class="quiz-title">The Source Code Quiz</h1>
+      <div class="quiz-subtitle">Wealth &amp; Visibility Diagnostic</div>
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-diamond"></div>
+        <div class="divider-line right"></div>
+      </div>
+      <p class="quiz-tagline">Pinpoint your #1 subconscious block to wealth &amp; visibility.</p>
+    </div>
+
+    <div class="card">
+      <p class="intro-text">
+        Your soul already knows where you are holding back.<br/><br/>
+        For each question, choose the answer that is your most immediate, gut-level reaction.
+        <strong>Don't overthink it.</strong> Your first impulse is the most honest — it comes from beneath the conditioning.<br/><br/>
+        Five questions. Total time: under 2 minutes.
+      </p>
+      <div class="intro-meta">
+        <span>
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          5 Questions
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm.5 5v5.25l4.5 2.67-.75 1.23L11 13V7h1.5z"/></svg>
+          Under 2 Minutes
+        </span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-gold" onclick="startQuiz()"><span>Begin Diagnostic</span></button>
+    </div>
+  </div>
+
+  <!-- SCREEN 1: Quiz -->
+  <div id="screen-quiz" style="display:none;">
+    <div class="progress-wrap" id="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">Question 1 of 5</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="card" id="question-card">
+      <div class="question-number" id="q-number">Question 01</div>
+      <div class="question-text" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+      <div class="btn-nav" style="margin-top:36px;">
+        <button class="btn-back" id="back-btn" onclick="goBack()">← Back</button>
+        <button class="btn-gold" id="next-btn" onclick="nextQuestion()" style="display:none;"><span id="next-label">Next Question →</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 1.5: Lead Capture -->
+  <div id="screen-capture" style="display:none;">
+    <div class="header">
+      <div class="brand-eyebrow">Your Diagnostic is Ready</div>
+      <div class="halo halo-sm"></div>
+      <h1 class="quiz-title" style="font-size:clamp(22px,5vw,38px);">One Last Step</h1>
+      <div class="divider"><div class="divider-line"></div><div class="divider-diamond"></div><div class="divider-line right"></div></div>
+      <p class="quiz-tagline" style="font-size:clamp(14px,2.5vw,18px);">Enter your details below to reveal your #1 subconscious block.</p>
+    </div>
+
+    <div class="card">
+      <p class="intro-text" style="margin-bottom:32px;">Your result is waiting. I'll also send you insights and tools to help you start releasing this block — straight to your inbox.</p>
+
+      <div class="capture-field">
+        <label class="capture-label" for="cap-name">First Name</label>
+        <input class="capture-input" type="text" id="cap-name" placeholder="Your first name" autocomplete="given-name" />
+      </div>
+
+      <div class="capture-field" style="margin-top:18px;">
+        <label class="capture-label" for="cap-email">Email Address</label>
+        <input class="capture-input" type="email" id="cap-email" placeholder="your@email.com" autocomplete="email" />
+      </div>
+
+      <p id="capture-error" style="display:none;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.15em;color:#c0623a;margin-top:14px;text-align:center;">Please enter your name and a valid email to continue.</p>
+
+      <p style="font-size:13px;font-weight:300;font-style:italic;color:var(--gold-dim);margin-top:20px;text-align:center;line-height:1.6;">
+        Your privacy is sacred. No spam — ever. Unsubscribe anytime.
+      </p>
+
+      <div class="btn-nav" style="margin-top:32px;">
+        <button class="btn-back" onclick="goBackToQuiz()">← Back</button>
+        <button class="btn-gold" onclick="submitCapture()"><span>Reveal My Block →</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Result -->
+  <div id="screen-result" style="display:none;">
+    <div class="header">
+      <div class="brand-eyebrow">Your Diagnostic is Complete</div>
+      <div class="halo halo-md"></div>
+    </div>
+
+    <div class="card" id="result-card"></div>
+
+    <div class="btn-row" style="margin-top: 28px;">
+      <button class="btn-ghost" onclick="retakeQuiz()">Retake the Diagnostic</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+<div class="footer">
+  Wendy Lee-Chu &nbsp;·&nbsp; Energy Healing &amp; Therapy &nbsp;·&nbsp; <a href="https://wendyleechu.com" target="_blank" class="footer-link">wendyleechu.com</a>
+</div>
+
+<script>
+const questions = [
+  {
+    text: "When you think about charging more or being seen on a bigger stage, what's your immediate gut reaction?",
+    options: [
+      { letter: "A", text: "Excitement — I know I'm worth it, I just need the right strategy.", type: "strategy" },
+      { letter: "B", text: "Anxiety — What if people think I'm too much, or not enough?", type: "worth" },
+      { letter: "C", text: "Hesitation — I need to be more ready, more qualified, more… something.", type: "readiness" },
+      { letter: "D", text: "Guilt — Who am I to charge that? Other people need it more than I do.", type: "guilt" }
+    ]
+  },
+  {
+    text: "You're about to post something bold — a high-ticket offer, a strong opinion, a piece of your true story. What happens first?",
+    options: [
+      { letter: "A", text: "I think about who might unfollow or judge me.", type: "approval" },
+      { letter: "B", text: "I soften it, rewrite it, make it smaller than I meant.", type: "worth" },
+      { letter: "C", text: "I wonder if I've earned the right to say this yet.", type: "readiness" },
+      { letter: "D", text: "I feel guilty for wanting visibility at all.", type: "guilt" }
+    ]
+  },
+  {
+    text: "A dream client asks your rate. You quote it. There's a pause. You feel…",
+    options: [
+      { letter: "A", text: "The urge to instantly explain, justify, or discount.", type: "worth" },
+      { letter: "B", text: "Fear they'll say yes and you'll have to deliver.", type: "readiness" },
+      { letter: "C", text: "Dread they'll say no and it'll mean something about you.", type: "approval" },
+      { letter: "D", text: "Like you're asking for too much from someone who might not be able to afford it.", type: "guilt" }
+    ]
+  },
+  {
+    text: "When you look at successful people in your field, your first honest thought is:",
+    options: [
+      { letter: "A", text: "They know something I don't yet.", type: "readiness" },
+      { letter: "B", text: "They're just more confident — not necessarily better.", type: "approval" },
+      { letter: "C", text: "I could do what they do. I just haven't let myself.", type: "worth" },
+      { letter: "D", text: "How do they not feel selfish taking up that much space?", type: "guilt" }
+    ]
+  },
+  {
+    text: "Your wealth block lives most in:",
+    options: [
+      { letter: "A", text: "Your voice — you stay quiet when you should speak.", type: "approval" },
+      { letter: "B", text: "Your pricing — you undercharge and over-deliver.", type: "worth" },
+      { letter: "C", text: "Your timing — you wait until you're 'ready'.", type: "readiness" },
+      { letter: "D", text: "Your permission — you don't let yourself want what you want.", type: "guilt" }
+    ]
+  }
+];
+
+const results = {
+  worth: {
+    archetype: "The Undervalued Alchemist",
+    title: "Your Block: Self-Worth",
+    tagline: "You've mastered the work. Now it's time to master receiving.",
+    body: `You're <strong>deeply capable</strong> — and on some level, you know it. But somewhere between your gifts and your price tag, there's a gap. You unconsciously shrink your rates, your offers, your presence to make others comfortable. This isn't a strategy problem. It's a subconscious code running beneath the surface. <strong>Your worth was never something you had to earn.</strong> It was woven into you before you built a single skill. The real initiation isn't becoming more qualified — it's releasing the old belief that you have to justify your value at all.`,
+    traits: [
+      { label: "Pattern", value: "Over-delivering, under-charging" },
+      { label: "Root Belief", value: "I must earn my worth" },
+      { label: "The Recode", value: "Embody value unconditionally" },
+      { label: "Healing Path", value: "Sovereign Pricing Initiation" }
+    ]
+  },
+  approval: {
+    archetype: "The Invisible Sovereign",
+    title: "Your Block: Approval Seeking",
+    tagline: "You were born to lead — not to be liked by everyone.",
+    body: `You have a powerful point of view, a strong presence, and <strong>gifts that could genuinely change lives</strong>. But there's a subconscious program running that says: stay safe, stay palatable, don't take up too much space. You're editing yourself in real time — softening your message, dimming your light, making yourself smaller so no one leaves. Here's what the energy work reveals: <strong>the people who need you most can only find you when you stop hiding for the ones who don't.</strong> Visibility isn't vanity. It's your soul's assignment.`,
+    traits: [
+      { label: "Pattern", value: "Shrinking, softening, editing" },
+      { label: "Root Belief", value: "Being seen is dangerous" },
+      { label: "The Recode", value: "Lead with full authentic signal" },
+      { label: "Healing Path", value: "Visibility Reclamation Recode" }
+    ]
+  },
+  readiness: {
+    archetype: "The Perpetual Preparer",
+    title: "Your Block: The Readiness Illusion",
+    tagline: "You are not waiting to be ready. You are ready, waiting.",
+    body: `More certifications. More refinement. More research. One more course before you launch. You've built something extraordinary — and you're still renovating the foundation. The truth RTT® reveals again and again: <strong>readiness is a feeling, not a fact</strong>. The subconscious mind will always find another reason to wait, because waiting feels safer than being fully seen. You have already crossed the threshold of capable. What you're truly waiting for is <strong>inner permission</strong> — and no credential will give you that. Only the work at the root can.`,
+    traits: [
+      { label: "Pattern", value: "Preparing, delaying, perfecting" },
+      { label: "Root Belief", value: "I'm not enough yet" },
+      { label: "The Recode", value: "Act from identity, not credentials" },
+      { label: "Healing Path", value: "Imposter Code Collapse" }
+    ]
+  },
+  guilt: {
+    archetype: "The Selfless Saboteur",
+    title: "Your Block: Wealth Guilt",
+    tagline: "You cannot pour from a cup you won't let yourself fill.",
+    body: `You carry deep care — for your clients, your community, your impact. And somewhere in your early conditioning, a belief was coded in: <strong>wanting abundance is selfish</strong>. Somewhere it got linked to taking from others, to being "too much," to betraying who you are. But guilt is not humility. It's a ceiling built to keep you safe from your own power. The people who need your healing most need you <strong>resourced, visible, and unapologetic</strong>. Your abundance doesn't diminish others — it amplifies your ability to serve. Releasing this code is one of the deepest initiations there is.`,
+    traits: [
+      { label: "Pattern", value: "Shrinking desire, deflecting praise" },
+      { label: "Root Belief", value: "Wanting more is selfish" },
+      { label: "The Recode", value: "Abundance as sacred service" },
+      { label: "Healing Path", value: "Receiving Permission Unlock" }
+    ]
+  }
+};
+
+let answers = [];
+let currentQ = 0;
+let selectedType = null;
+
+function startQuiz() {
+  document.getElementById('screen-intro').style.display = 'none';
+  document.getElementById('screen-quiz').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  const pct = Math.round((currentQ / questions.length) * 100);
+
+  document.getElementById('progress-text').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('q-number').textContent = `Question ${String(currentQ + 1).padStart(2, '0')}`;
+  document.getElementById('q-text').textContent = q.text;
+
+  const card = document.getElementById('question-card');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'fadeUp 0.45s ease both';
+
+  const optionsEl = document.getElementById('q-options');
+  optionsEl.innerHTML = '';
+  selectedType = null;
+  document.getElementById('next-btn').style.display = 'none';
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${opt.letter}</span><span class="option-text">${opt.text}</span>`;
+    btn.onclick = () => selectOption(opt.type, btn);
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectOption(type, el) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedType = type;
+  document.getElementById('next-btn').style.display = 'block';
+  document.getElementById('next-label').textContent = currentQ < questions.length - 1 ? 'Next Question →' : 'Reveal My Block →';
+}
+
+function nextQuestion() {
+  if (!selectedType) return;
+  answers.push(selectedType);
+
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showCapture();
+  }
+}
+
+function goBack() {
+  if (currentQ === 0) {
+    // Back to intro
+    answers = [];
+    document.getElementById('screen-quiz').style.display = 'none';
+    document.getElementById('screen-intro').style.display = 'block';
+  } else {
+    // Go to previous question, remove last answer
+    answers.pop();
+    currentQ--;
+    renderQuestion();
+    // Restore previously selected answer if any
+    const prevAnswer = answers[currentQ];
+    if (prevAnswer) {
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        const type = questions[currentQ].options.find(o => o.letter === btn.querySelector('.option-letter').textContent)?.type;
+        if (type === prevAnswer) {
+          btn.classList.add('selected');
+          selectedType = prevAnswer;
+          document.getElementById('next-btn').style.display = 'block';
+          document.getElementById('next-label').textContent = currentQ < questions.length - 1 ? 'Next Question →' : 'Reveal My Block →';
+        }
+      });
+    }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showCapture() {
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('progress-pct').textContent = '100%';
+  document.getElementById('screen-quiz').style.display = 'none';
+  document.getElementById('screen-capture').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goBackToQuiz() {
+  answers.pop();
+  document.getElementById('screen-capture').style.display = 'none';
+  document.getElementById('screen-quiz').style.display = 'block';
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function submitCapture() {
+  const name = document.getElementById('cap-name').value.trim();
+  const email = document.getElementById('cap-email').value.trim();
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const errorEl = document.getElementById('capture-error');
+
+  if (!name || !emailValid) {
+    errorEl.style.display = 'block';
+    return;
+  }
+  errorEl.style.display = 'none';
+
+  // Disable button and show loading state
+  const btn = document.querySelector('#screen-capture .btn-gold');
+  btn.disabled = true;
+  btn.querySelector('span').textContent = 'Unlocking your result…';
+
+  // Submit to MailerLite
+  const MAILERLITE_API_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYjYxNzBjNTAzZjkyYmZjYWE0YjQ4ZDU4NTA4YzRmOTU2ZmJhNzZmYzdlYjFjYTUyMDIzMjQwNzRkMzNjYTJhN2U4NGM4MWE1OGQ4N2FlYTAiLCJpYXQiOjE3Nzc3NDk5MjcuMTQ0NTg5LCJuYmYiOjE3Nzc3NDk5MjcuMTQ0NTkyLCJleHAiOjQ5MzM0MjM1MjcuMTM3NzU5LCJzdWIiOiIyMzMwMTk4Iiwic2NvcGVzIjpbXX0.I_g-TDMcNw9HpCuQmjK5Lj_sK4tNGhI32HeKHfpBpnm4t1_sQ36mKeBi79SChYoWSye2kILpgZvpHSsQDfTZCuwu-wMI7kdXsf0S-CZ3wOHOSQlmfB0aojHo4V8u9bNszWPsO6s22knIicwoYJt1aG0_9GKLQGEvrWPFLJD6ZO1cEIlSPJM3pDniXoIR8UTajl5HAxQSKxpcr7PzudW0FgNb9Z5BrjiXi0X0pEn24uL57icmFnJu_tHSpU0Mc8O3-nJ0nnm2n1pbCgS_uhOJpDysHd3RJr3Bg2SmnbHs3TTD3opf4oZNNAsXL7ekcHtaQ5-w99HFx5nJpSI5O3P1LdetoXHlJpGQvacKN8u3NWbc1TSeVNbgonC2FuQD0fp2HyxHJO5pnpwGsa3SYZiYfYxeeSbmajH_13STOYim-sqozCM3c-v2vhvMfPR1I_tYlgvm93VINx0FlLX7glBU-xleHgxbHI0nXy3eGmC9BcibZ13GxMixJQw-V-v05vbTlUE-k7xzEFs2he8LKd5yPmTKQNAlMMCLCh1V9vuMNVRhBbqgWx_f2lSOdsqxZZUJ282ShCn67LRquyKwz0S-DO3lwek6fYeQCq1hb4oIUmwj0Y4kckb8iPIBeFe7kvo028baawpjPL25BgIeTqHn_pzd-DnNftoZ6RZaJbpemRoo';
+  const MAILERLITE_GROUP_ID = '186385386746939140';
+
+  fetch('https://connect.mailerlite.com/api/subscribers', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${MAILERLITE_API_KEY}`
+    },
+    body: JSON.stringify({
+      email: email,
+      fields: { name: name },
+      groups: [MAILERLITE_GROUP_ID]
+    })
+  })
+  .then(res => {
+    // 200 = updated existing, 201 = new subscriber — both are success
+    if (res.ok || res.status === 200 || res.status === 201) {
+      document.getElementById('screen-capture').style.display = 'none';
+      showResult(name);
+    } else {
+      return res.json().then(data => { throw new Error(data.message || 'Something went wrong'); });
+    }
+  })
+  .catch(err => {
+    console.error('MailerLite error:', err);
+    // Still show result even if API fails — don't block the user
+    document.getElementById('screen-capture').style.display = 'none';
+    showResult(name);
+  });
+}
+
+function showResult(name) {
+  // Tally
+  const counts = {};
+  answers.forEach(a => counts[a] = (counts[a] || 0) + 1);
+  const topType = Object.entries(counts).sort((a,b) => b[1]-a[1])[0][0];
+  const r = results[topType];
+  const firstName = name ? name.split(' ')[0] : '';
+  const greeting = firstName ? `${firstName}, your` : 'Your';
+
+  const card = document.getElementById('result-card');
+  card.innerHTML = `
+    <div class="result-header">
+      <div class="result-archetype">${greeting} Archetype</div>
+      <div class="result-title">${r.archetype}</div>
+      <div class="quiz-subtitle" style="margin-top:4px;">${r.title}</div>
+      <div class="divider" style="margin:20px 0;">
+        <div class="divider-line"></div>
+        <div class="divider-diamond"></div>
+        <div class="divider-line right"></div>
+      </div>
+      <p class="result-tagline">"${r.tagline}"</p>
+    </div>
+
+    <div class="result-body">${r.body}</div>
+
+    <div class="result-traits">
+      ${r.traits.map(t => `
+        <div class="trait-pill">
+          <div class="trait-label">${t.label}</div>
+          <div class="trait-value">${t.value}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="cta-section">
+      <div class="cta-headline">Ready to Recode at the Root?</div>
+      <p class="cta-body">This block isn't a life sentence. It's subconscious conditioning — and it can be released from the inside out through RTT® and energy healing.</p>
+      <div class="btn-row-gap">
+        <button class="btn-gold" onclick="window.open('https://www.wendyleechu.com/booking-calendar/strategy-call','_blank')"><span>Book a Free Clarity Call →</span></button>
+        <button class="btn-ghost" onclick="window.open('https://www.skool.com/the-awakening-portal-6413/about','_blank')">Join The Re-Awakening Portal</button>
+      </div>
+
+      <div style="margin-top: 36px; padding: 28px 32px; border: 1px solid var(--border-bright); background: linear-gradient(135deg, rgba(201,146,42,0.08) 0%, rgba(201,146,42,0.03) 100%); position: relative;">
+        <div style="position:absolute;top:-1px;left:-1px;width:16px;height:16px;border-top:2px solid var(--gold);border-left:2px solid var(--gold);"></div>
+        <div style="position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);"></div>
+        <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Featured Event</div>
+        <div style="font-family:'Cinzel',serif;font-size:clamp(15px,3vw,20px);font-weight:700;color:var(--white);letter-spacing:0.04em;margin-bottom:10px;">Decode &amp; Recode the Matrix</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;font-style:italic;color:var(--white-dim);line-height:1.65;margin-bottom:20px;">Your block has been identified. Now it's time to go deeper — dissolve the code at the subconscious root and step into full alignment.</p>
+        <button class="btn-gold" onclick="window.open('https://decode-recode-events.lovable.app/','_blank')" style="width:100%;max-width:360px;"><span>✦ Decode &amp; Recode the Matrix →</span></button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('screen-result').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retakeQuiz() {
+  answers = [];
+  currentQ = 0;
+  selectedType = null;
+  document.getElementById('cap-name').value = '';
+  document.getElementById('cap-email').value = '';
+  document.getElementById('capture-error').style.display = 'none';
+  document.getElementById('screen-result').style.display = 'none';
+  document.getElementById('screen-capture').style.display = 'none';
+  document.getElementById('screen-intro').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Floating particles
+const container = document.getElementById('particles');
+for (let i = 0; i < 18; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 2 + 1;
+  p.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random() * 100}%;
+    bottom:-10px;
+    animation-duration:${8 + Math.random() * 14}s;
+    animation-delay:${Math.random() * 10}s;
+    opacity:0;
+  `;
+  container.appendChild(p);
+}
+</script>
+</body>
+</html>
