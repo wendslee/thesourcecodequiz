@@ -471,10 +471,10 @@ function submitCapture() {
   const r = results[topType];
   const resultLabel = r.title; // e.g. "Your Block: Self-Worth"
 
-  fetch('https://connect.mailerlite.com/api/subscribers', {
+  fetch('/.netlify/functions/subscribe', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
-    body: JSON.stringify({ email, fields: { name, quiz_result: resultLabel }, groups: [GROUP_ID] })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, name, quiz_result: resultLabel })
   })
   .then(() => showResult(name))
   .catch(() => showResult(name));
