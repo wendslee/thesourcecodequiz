@@ -1,4 +1,5 @@
 const KIT_FORM_ID = '9730729';
+const KIT_API_KEY = process.env.KIT_API_KEY;
 const VALID_RESULTS = new Set(['worth', 'approval', 'readiness', 'guilt']);
 
 exports.handler = async (event) => {
@@ -39,27 +40,39 @@ exports.handler = async (event) => {
     };
   }
 
-  const formData = new URLSearchParams({
-    email_address: email,
-    'fields[first_name]': firstName,
-    'fields[quiz_result]': resultLabel,
-    'fields[quiz_result_link]': resultLink
-  });
+  if (!KIT_API_KEY) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Kit integration is not configured.' })
+    };
+  }
 
   try {
     const response = await fetch(
-      `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`,
+      `https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`,
       {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          'Content-Type': 'application/json'
         },
-        body: formData.toString()
+        body: JSON.stringify({
+          api_key: KIT_API_KEY,
+          email,
+          first_name: firstName,
+          fields: {
+            quiz_result: resultLabel,
+            quiz_result_link: resultLink
+          }
+        })
       }
     );
 
-    if (!response.ok) {
+    const responseBody = await response.json().catch(() => null);
+    const subscriber =
+      responseBody?.subscription?.subscriber || responseBody?.subscriber;
+
+    if (!response.ok || !subscriber?.id) {
       return {
         statusCode: 502,
         body: JSON.stringify({ error: 'Kit could not save this subscriber.' })
