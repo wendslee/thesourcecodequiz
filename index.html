@@ -412,8 +412,6 @@ footer{margin-top:52px;padding-bottom:28px;text-align:center;position:relative;z
 </footer>
 
 <script>
-const QDECK_URL = 'https://ardeck.wendyleechu.com/';
-
 const questions = [
   {
     text:"When you think about charging more or being seen on a bigger stage, what's your immediate gut reaction?",
@@ -625,8 +623,6 @@ function showResult(name,forcedType){
   const nameParts=name?name.trim().split(/\s+/).filter(p=>p.length>1||!/^[A-Za-z]\.?$/.test(p)):[];
   const fn=nameParts.length?nameParts[0]:'';
   const greeting=fn?`${fn}, your archetype is`:'Your archetype is';
-  const deckUrl=QDECK_URL+'?archetype='+r.deckKey;
-
   document.getElementById('result-card').innerHTML=`
     <div style="text-align:center;margin-bottom:24px">
       <div class="result-archetype">${greeting}</div>
@@ -662,17 +658,17 @@ function showResult(name,forcedType){
         </div>
 
         <h3 id="step1-heading" style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(20px,3.5vw,28px);background:linear-gradient(135deg,#F0D98A 0%,#dfba5e 50%,#C9A84C 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;">
-          Claim Your Recode Deck
+          Access Your Activation Deck in the Portal
         </h3>
 
         <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,2.3vw,18px);font-weight:300;line-height:1.85;color:rgba(245,239,230,.75);margin-bottom:20px;">
-          Your personalized Archetype Recode Deck is ready. It is filtered to your quiz result so you can begin integrating the exact pattern revealed in your diagnosis.
+          Your personalized Archetype Recode Activation Deck is waiting inside the RE-AWAKENING PORTAL. Join the free community to access the deck and begin integrating the exact pattern revealed in your diagnosis.
         </p>
 
         <div style="text-align:center;">
-          <a href="${deckUrl}" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.skool.com/the-awakening-portal-6413/about" target="_blank" rel="noopener noreferrer"
              class="cta-solid">
-            Open My Personalized Recode Deck
+            Join the RE-AWAKENING PORTAL
           </a>
         </div>
       </article>
@@ -697,7 +693,7 @@ function showResult(name,forcedType){
         </p>
 
         <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,2.3vw,18px);font-weight:300;line-height:1.85;color:rgba(245,239,230,.75);margin-bottom:0;">
-          The link and instructions to use your coupon (<code style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;color:#dfba5e;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:4px;padding:2px 7px;">SSC2026</code>) are on the final page of the Recode Deck you're about to claim. This is the permanent system upgrade to install the source code for aligned wealth.
+          The link and instructions to use your coupon (<code style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;color:#dfba5e;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:4px;padding:2px 7px;">SSC2026</code>) are on the final page of the Archetype Recode Activation Deck inside the Portal. This is the permanent system upgrade to install the source code for aligned wealth.
         </p>
       </article>
 
