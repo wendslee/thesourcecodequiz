@@ -1,30 +1,80 @@
+const KIT_FORM_ID = '9730729';
+const VALID_RESULTS = new Set(['worth', 'approval', 'readiness', 'guilt']);
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return {
+      statusCode: 405,
+      headers: { Allow: 'POST' },
+      body: JSON.stringify({ error: 'Method Not Allowed' })
+    };
   }
 
-  const { email, name, quiz_result } = JSON.parse(event.body);
+  let payload;
+  try {
+    payload = JSON.parse(event.body || '{}');
+  } catch {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Invalid request' })
+    };
+  }
 
-  const API_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiZjU4MDQ2MjZjNmVmYzhlZTQzN2EyMGI5ODI1ZGRkYzQ3YTEwMjIzNzRmZmZhYTQ0NzFiMThhZThjMjljNmI1NWJmZTE0MzYwZTc2ZTg4MTQiLCJpYXQiOjE3Nzc5MjA4ODQuNTQ0NjExLCJuYmYiOjE3Nzc5MjA4ODQuNTQ0NjEzLCJleHAiOjQ5MzM1OTQ0ODQuNTQwNDcsInN1YiI6IjIzMzAxOTgiLCJzY29wZXMiOltdfQ.ebM8uNakQoSRJVbbdM3eBarjBOiDVf15glqgV8h7sorobW3GDd8-oP5AnkutACdqmSMnO1dqRTfQQJ0aljPld-G6LXyaVfECaZx5ux0a2UmVxYRrPd7EtEpvsODFzLMojEiIH852B8FiMFMYn6QUG-GSEpirtLZREj4jdrXuKgNJ_pdjRSt3g47nKpo0uscSV_Waa2ELyVuHKnuWXMpaY0WgikHxvRNnkq6fi830xx5lGyLm54fiA8DMbJLyfTdy2gxdDVDdc4ekl19WE4TM9W22W8ZLFN-M3-bX5dvVBloMz3L4TWicphnG6bBsPmZYHe05slMKwue9Qmur90FTc-YtSC6LJ5MSmqDnoly8xogiNPYklPszFJ-auvraAdFMOsZBc8_f1-z5lr8uHxquvtl12ShLJ3Xu4CoQq87GatrDbafWyzecrPTdPtVGd9f6DXeZ0j05rmHibr7Kh_LlI6KnUeHg8p0QIz4arC78gFbguwFmaAaheSg_mCFe90fpF0xuioXU-OGUvxqnIWgMxLdr6repBePt_w3eewkF4mGSGvF03OXKgXiqy1Wu5UbVMfk1gK44OzJDia2jYbTLoDoR8raTf8ulJS6egrGfL_C2NiitysB5XhPL_6o0mAjKjK3iLn7SLBoaJoDdcxpE4zdqm5y9MWKElWZs-LSVjJs';
-  const GROUP_ID = '186385386746939140';
+  const email = String(payload.email || '').trim().toLowerCase();
+  const firstName = String(payload.first_name || '').trim();
+  const resultKey = String(payload.result_key || '').trim();
+  const resultLabel = String(payload.quiz_result || '').trim();
+  const resultLink = String(payload.quiz_result_link || '').trim();
 
-  const response = await fetch('https://connect.mailerlite.com/api/subscribers', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${API_KEY}`
-    },
-    body: JSON.stringify({
-      email,
-      fields: { name, quiz_result },
-      groups: [GROUP_ID]
-    })
+  if (
+    !firstName ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+    !VALID_RESULTS.has(resultKey) ||
+    !resultLabel ||
+    !resultLink.startsWith('https://scquiz.wendyleechu.com/')
+  ) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Please provide valid quiz details.' })
+    };
+  }
+
+  const formData = new URLSearchParams({
+    email_address: email,
+    'fields[first_name]': firstName,
+    'fields[quiz_result]': resultLabel,
+    'fields[quiz_result_link]': resultLink
   });
 
-  const data = await response.json();
+  try {
+    const response = await fetch(
+      `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`,
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: formData.toString()
+      }
+    );
 
-  return {
-    statusCode: response.ok ? 200 : 500,
-    body: JSON.stringify(data)
-  };
+    if (!response.ok) {
+      return {
+        statusCode: 502,
+        body: JSON.stringify({ error: 'Kit could not save this subscriber.' })
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ok: true })
+    };
+  } catch {
+    return {
+      statusCode: 502,
+      body: JSON.stringify({ error: 'Unable to reach Kit.' })
+    };
+  }
 };
