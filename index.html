@@ -576,7 +576,13 @@ function nextQ(){
 
 function goBackToQuiz(){show('s-quiz');renderQ();}
 
-function submitCapture(){
+function getResultType(){
+  const counts={};
+  answers.forEach(a=>counts[a]=(counts[a]||0)+1);
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0];
+}
+
+async function submitCapture(){
   const name=document.getElementById('cap-name').value.trim();
   const email=document.getElementById('cap-email').value.trim();
   const valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -586,19 +592,35 @@ function submitCapture(){
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;
   document.getElementById('submit-label').textContent='Unlocking your archetype…';
-  const API_KEY='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYjYxNzBjNTAzZjkyYmZjYWE0YjQ4ZDU4NTA4YzRmOTU2ZmJhNzZmYzdlYjFjYTUyMDIzMjQwNzRkMzNjYTJhN2U4NGM4MWE1OGQ4N2FlYTAiLCJpYXQiOjE3Nzc3NDk5MjcuMTQ0NTg5LCJuYmYiOjE3Nzc3NDk5MjcuMTQ0NTkyLCJleHAiOjQ5MzM0MjM1MjcuMTM3NzU5LCJzdWIiOiIyMzMwMTk4Iiwic2NvcGVzIjpbXX0.I_g-TDMcNw9HpCuQmjK5Lj_sK4tNGhI32HeKHfpBpnm4t1_sQ36mKeBi79SChYoWSye2kILpgZvpHSsQDfTZCuwu-wMI7kdXsf0S-CZ3wOHOSQlmfB0aojHo4V8u9bNszWPsO6s22knIicwoYJt1aG0_9GKLQGEvrWPFLJD6ZO1cEIlSPJM3pDniXoIR8UTajl5HAxQSKxpcr7PzudW0FgNb9Z5BrjiXi0X0pEn24uL57icmFnJu_tHSpU0Mc8O3-nJ0nnm2n1pbCgS_uhOJpDysHd3RJr3Bg2SmnbHs3TTD3opf4oZNNAsXL7ekcHtaQ5-w99HFx5nJpSI5O3P1LdetoXHlJpGQvacKN8u3NWbc1TSeVNbgonC2FuQD0fp2HyxHJO5pnpwGsa3SYZiYfYxeeSbmajH_13STOYim-sqozCM3c-v2vhvMfPR1I_tYlgvm93VINx0FlLX7glBU-xleHgxbHI0nXy3eGmC9BcibZ13GxMixJQw-V-v05vbTlUE-k7xzEFs2he8LKd5yPmTKQNAlMMCLCh1V9vuMNVRhBbqgWx_f2lSOdsqxZZUJ282ShCn67LRquyKwz0S-DO3lwek6fYeQCq1hb4oIUmwj0Y4kckb8iPIBeFe7kvo028baawpjPL25BgIeTqHn_pzd-DnNftoZ6RZaJbpemRoo';
-  const GROUP_ID='186385386746939140';
-  fetch('https://connect.mailerlite.com/api/subscribers',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':`Bearer ${API_KEY}`},
-    body:JSON.stringify({email,fields:{name},groups:[GROUP_ID]})
-  }).then(()=>showResult(name)).catch(()=>showResult(name));
+  const resultType=getResultType();
+  const result=results[resultType];
+  const resultLink=`${window.location.origin}${window.location.pathname}?result=${encodeURIComponent(resultType)}`;
+
+  try{
+    const response=await fetch('/.netlify/functions/subscribe',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        first_name:name,
+        email,
+        result_key:resultType,
+        quiz_result:`${result.archetype} — ${result.title}`,
+        quiz_result_link:resultLink
+      })
+    });
+    if(!response.ok)throw new Error('Subscription failed');
+    showResult(name,resultType);
+  }catch(error){
+    errEl.textContent="We couldn't save your details. Please try again.";
+    errEl.style.display='block';
+    btn.disabled=false;
+    document.getElementById('submit-label').textContent='Try Again →';
+  }
 }
 
-function showResult(name){
-  const counts={};
-  answers.forEach(a=>counts[a]=(counts[a]||0)+1);
-  const topType=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+function showResult(name,forcedType){
+  const topType=forcedType||getResultType();
+  if(!results[topType])return;
   const r=results[topType];
   const nameParts=name?name.trim().split(/\s+/).filter(p=>p.length>1||!/^[A-Za-z]\.?$/.test(p)):[];
   const fn=nameParts.length?nameParts[0]:'';
@@ -696,11 +718,16 @@ function retake(){
   document.getElementById('cap-name').value='';
   document.getElementById('cap-email').value='';
   document.getElementById('cap-error').style.display='none';
+  document.getElementById('cap-error').textContent='Please enter your name and a valid email to continue.';
   const btn=document.getElementById('btn-submit');
   btn.disabled=false;
   document.getElementById('submit-label').textContent='Reveal My Archetype →';
+  window.history.replaceState({},'',window.location.pathname);
   show('s-intro');
 }
+
+const sharedResult=new URLSearchParams(window.location.search).get('result');
+if(results[sharedResult])showResult('',sharedResult);
 
 // Stars — CSS-animated, matching landing page
 (function initStars(){
