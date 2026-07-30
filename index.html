@@ -606,10 +606,13 @@ async function submitCapture(){
         quiz_result_link:resultLink
       })
     });
-    if(!response.ok)throw new Error('Subscription failed');
+if(!response.ok){
+      const errBody = await response.json().catch(()=>({}));
+      throw new Error(`Status ${response.status}: ${errBody.error || 'no details'}`);
+    }
     showResult(name,resultType);
   }catch(error){
-    errEl.textContent="We couldn't save your details right now. Please try once more. If it happens again, email info@wendyleechu.com and we'll help you.";
+    errEl.textContent = "DEBUG: " + error.message;
     errEl.style.display='block';
     btn.disabled=false;
     document.getElementById('submit-label').textContent='Try Again →';
