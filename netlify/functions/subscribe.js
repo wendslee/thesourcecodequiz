@@ -1,6 +1,10 @@
 const KIT_FORM_ID = '9730729';
 const KIT_API_KEY = process.env.KIT_API_KEY;
 const VALID_RESULTS = new Set(['worth', 'approval', 'readiness', 'guilt']);
+const ALLOWED_RESULT_LINK_PREFIXES = [
+  'https://scquiz.wendyleechu.com/',
+  'https://thesourcecodequiz.netlify.app/'
+];
 const MAX_ATTEMPTS = 3;
 const REQUEST_TIMEOUT_MS = 8000;
 const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
@@ -129,8 +133,7 @@ exports.handler = async (event) => {
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
     !VALID_RESULTS.has(resultKey) ||
     !resultLabel ||
-    !resultLink.startsWith('https://scquiz.wendyleechu.com/')
-  ) {
+!ALLOWED_RESULT_LINK_PREFIXES.some((prefix) => resultLink.startsWith(prefix))  ) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: 'Please provide valid quiz details.' })
