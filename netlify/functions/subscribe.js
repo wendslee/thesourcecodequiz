@@ -1,6 +1,103 @@
 const KIT_FORM_ID = '9730729';
 const KIT_API_KEY = process.env.KIT_API_KEY;
 const VALID_RESULTS = new Set(['worth', 'approval', 'readiness', 'guilt']);
+const MAX_ATTEMPTS = 3;
+const REQUEST_TIMEOUT_MS = 8000;
+const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
+
+const wait = (milliseconds) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+const getRetryDelay = (response, attempt) => {
+  const retryAfterHeader = response.headers.get('retry-after');
+  const retryAfter = Number(retryAfterHeader);
+  if (
+    retryAfterHeader !== null &&
+    Number.isFinite(retryAfter) &&
+    retryAfter >= 0
+  ) {
+    return Math.min(retryAfter * 1000, 3000);
+  }
+
+  return 350 * 2 ** (attempt - 1);
+};
+
+const subscribeToKit = async (subscriberDetails) => {
+  let lastError;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(
+        `https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`,
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            api_key: KIT_API_KEY,
+            ...subscriberDetails
+          }),
+          signal: controller.signal
+        }
+      );
+
+      const responseBody = await response.json().catch(() => null);
+
+      if (response.ok) {
+        return;
+      }
+
+      const kitMessage =
+        responseBody?.message ||
+        responseBody?.error ||
+        responseBody?.errors?.join(', ') ||
+        'No error details returned';
+
+      lastError = new Error(`Kit returned ${response.status}: ${kitMessage}`);
+      lastError.statusCode = response.status;
+
+      if (!RETRYABLE_STATUS_CODES.has(response.status)) {
+        throw lastError;
+      }
+
+      console.warn('Kit signup attempt will be retried', {
+        attempt,
+        statusCode: response.status
+      });
+
+      if (attempt < MAX_ATTEMPTS) {
+        await wait(getRetryDelay(response, attempt));
+      }
+    } catch (error) {
+      lastError = error;
+
+      if (
+        error.statusCode ||
+        (error.name !== 'AbortError' && attempt === MAX_ATTEMPTS)
+      ) {
+        throw error;
+      }
+
+      console.warn('Kit signup request will be retried', {
+        attempt,
+        reason: error.name === 'AbortError' ? 'timeout' : 'network error'
+      });
+
+      if (attempt < MAX_ATTEMPTS) {
+        await wait(350 * 2 ** (attempt - 1));
+      }
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  throw lastError || new Error('Kit signup failed');
+};
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -48,43 +145,26 @@ exports.handler = async (event) => {
   }
 
   try {
-    const response = await fetch(
-      `https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`,
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          api_key: KIT_API_KEY,
-          email,
-          first_name: firstName,
-          fields: {
-            quiz_result: resultLabel,
-            quiz_result_link: resultLink
-          }
-        })
+    await subscribeToKit({
+      email,
+      first_name: firstName,
+      fields: {
+        quiz_result: resultLabel,
+        quiz_result_link: resultLink
       }
-    );
-
-    const responseBody = await response.json().catch(() => null);
-    const subscriber =
-      responseBody?.subscription?.subscriber || responseBody?.subscriber;
-
-    if (!response.ok || !subscriber?.id) {
-      return {
-        statusCode: 502,
-        body: JSON.stringify({ error: 'Kit could not save this subscriber.' })
-      };
-    }
+    });
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ok: true })
     };
-  } catch {
+  } catch (error) {
+    console.error('Kit signup failed after retries', {
+      statusCode: error.statusCode || null,
+      reason: error.name === 'AbortError' ? 'timeout' : error.message
+    });
+
     return {
       statusCode: 502,
       body: JSON.stringify({ error: 'Unable to reach Kit.' })
