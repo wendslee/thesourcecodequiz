@@ -472,7 +472,8 @@ const results = {
       {l:"The Recode",v:"Embody value unconditionally"},
       {l:"Healing Path",v:"Sovereign Pricing Initiation"}
     ],
-    deckKey:"worth"
+    deckKey:"worth",
+    pfy:"you're ready to stop justifying your rates and start charging from unshakeable self-worth."
   },
   approval:{
     archetype:"Invisible Sovereign",
@@ -485,7 +486,8 @@ const results = {
       {l:"The Recode",v:"Lead with full authentic signal"},
       {l:"Healing Path",v:"Visibility Reclamation Recode"}
     ],
-    deckKey:"approval"
+    deckKey:"approval",
+    pfy:"you're done softening your message for people who aren't your people — and ready to be fully, unapologetically visible."
   },
   readiness:{
     archetype:"Perpetual Preparer",
@@ -498,7 +500,8 @@ const results = {
       {l:"The Recode",v:"Act from identity, not credentials"},
       {l:"Healing Path",v:"Imposter Code Collapse"}
     ],
-    deckKey:"readiness"
+    deckKey:"readiness",
+    pfy:"you're done waiting to feel ready and you're ready to start acting from who you already are."
   },
   guilt:{
     archetype:"Selfless Saboteur",
@@ -511,7 +514,8 @@ const results = {
       {l:"The Recode",v:"Abundance as sacred service"},
       {l:"Healing Path",v:"Receiving Permission Unlock"}
     ],
-    deckKey:"guilt"
+    deckKey:"guilt",
+    pfy:"you're ready to stop shrinking your abundance so others feel comfortable — and start receiving without guilt."
   }
 };
 
@@ -656,26 +660,29 @@ function showResult(name,forcedType){
       <article style="background:hsl(30 25% 7%);border:1px solid hsl(40 65% 38%);border-radius:16px;padding:32px 36px 28px;position:relative;overflow:hidden;box-shadow:0 10px 40px -10px hsl(42 78% 50% / 0.32),0 0 80px hsl(42 78% 60% / 0.15),inset 0 1px 0 hsl(42 78% 60% / 0.28);margin-bottom:0;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;" aria-labelledby="path2-heading">
         <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(135deg,hsl(45 95% 68%) 0%,hsl(40 80% 55%) 50%,hsl(35 70% 40%) 100%);opacity:1;"></div>
 
-        <!-- Recommended badge -->
-        <div style="position:absolute;top:18px;right:20px;font-family:'Montserrat',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:hsl(28,22%,5%);background:linear-gradient(135deg,hsl(45 95% 68%),hsl(40 80% 55%));border-radius:20px;padding:4px 12px;">
-          Recommended
-        </div>
 
-        <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.24em;text-transform:uppercase;color:hsl(40 25% 70%);margin-bottom:14px;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:hsl(42 85% 68%);margin-bottom:6px;">
           🔬 The Diagnostics
+        </div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2vw,15px);font-weight:300;font-style:italic;color:rgba(245,239,230,.60);margin-bottom:18px;">
+          Where the ${r.archetype} pattern gets intercepted — and rewritten.
         </div>
 
         <!-- Value stack -->
         <div style="margin-bottom:22px;">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2vw,16px);font-weight:300;color:rgba(245,239,230,.75);line-height:2.1;">
-            ✔ &nbsp;Everything in 🦋 The Re-Awakening Portal<br>
-            ✔ &nbsp;<strong style="-webkit-text-fill-color:rgba(245,239,230,.92);color:rgba(245,239,230,.92);font-weight:500;">60-Card Archetype Recode Activation Deck</strong> 🎴 <span style="color:rgba(201,168,76,0.60);font-style:italic;">— access after month 3</span><br>
-            ✔ &nbsp;Decode the Matrix™, Recalibration &amp; Re-Awakening Vaults<br>
-            ✔ &nbsp;Decode Conversation Tool
+          <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2vw,16px);font-weight:300;font-style:italic;line-height:1.75;color:rgba(245,239,230,.68);margin:0 0 14px;">Most people stay at awareness. The Diagnostics takes you deeper — into the code that's been running quietly beneath your pricing, your presence, your choices.</p>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2vw,16px);font-weight:300;color:rgba(245,239,230,.75);display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;gap:8px;align-items:baseline;">✔<span>Everything in 🦋 The Re-Awakening Portal</span></div>
+            <div style="display:flex;gap:8px;align-items:baseline;">✔<span><strong style="-webkit-text-fill-color:rgba(245,239,230,.92);color:rgba(245,239,230,.92);font-weight:500;">60-Card Archetype Recode Activation Deck</strong> 🎴 <span style="color:rgba(201,168,76,0.60);font-style:italic;">— unlocks month 3, or immediately with annual</span></span></div>
+            <div style="display:flex;gap:8px;align-items:baseline;">✔<span>Decode the Matrix™ Vault <span style="color:rgba(201,168,76,0.55);font-style:italic;">— full replay library</span></span></div>
+            <div style="display:flex;gap:8px;align-items:baseline;">✔<span>Recoding Your Mind 🧠 <span style="color:rgba(201,168,76,0.55);font-style:italic;">— subconscious OS protocols to install new codes</span></span></div>
+            <div style="display:flex;gap:8px;align-items:baseline;">✔<span>Recalibration Vault 🧘‍♀️ <span style="color:rgba(201,168,76,0.55);font-style:italic;">— grounding meditations &amp; nervous system regulation</span></span></div>
+            <div style="display:flex;gap:8px;align-items:baseline;">✔<span>Re-Awakening Resets ✨ <span style="color:rgba(201,168,76,0.55);font-style:italic;">— momentum challenges for real-world shifts</span></span></div>
+            <div style="display:flex;gap:8px;align-items:baseline;">✔<span>Decode Conversation Tool <span style="color:rgba(201,168,76,0.55);font-style:italic;">— guided self-discovery session + PDF</span></span></div>
           </div>
           <!-- Annual bonus highlight -->
           <div style="margin-top:14px;border:1px solid rgba(201,168,76,0.35);border-radius:10px;padding:12px 16px;background:rgba(201,168,76,0.05);">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2vw,15px);font-weight:300;color:rgba(245,239,230,.80);line-height:1.7;">⭐ <strong style="-webkit-text-fill-color:rgba(245,239,230,.92);color:rgba(245,239,230,.92);font-weight:500;">Annual:</strong> Your 1:1 Decode the Matrix™ Deep Dive <span style="color:rgba(201,168,76,0.65);font-style:italic;">($197 value)</span> + Immediate Deck Access 🎴</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,1.9vw,14px);font-weight:300;color:rgba(245,239,230,.80);line-height:1.7;">⭐ <strong style="-webkit-text-fill-color:rgba(245,239,230,.92);color:rgba(245,239,230,.92);font-weight:500;">Annual:</strong> Your 1:1 Decode the Matrix™ Deep Dive <span style="color:rgba(201,168,76,0.65);font-style:italic;">($197 value)</span> + immediate deck access 🎴</div>
           </div>
         </div>
 
@@ -692,13 +699,16 @@ function showResult(name,forcedType){
             <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-family:'Montserrat',sans-serif;font-size:7.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:hsl(28,22%,5%);background:linear-gradient(135deg,hsl(45 95% 68%),hsl(40 80% 55%));border-radius:20px;padding:3px 10px;white-space:nowrap;">Best Value</div>
             <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:rgba(201,168,76,0.75);margin-bottom:6px;">Annual</div>
             <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,28px);font-weight:400;color:#C9A84C;line-height:1;">$97<span style="font-size:14px;color:rgba(201,168,76,0.65);">/year</span></div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(245,239,230,.60);margin-top:4px;">Deck immediately + 1:1 Deep Dive ✦</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(245,239,230,.60);margin-top:4px;">Deck now + 1:1 Deep Dive ✦</div>
           </div>
         </div>
 
+        <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(13px,1.9vw,15px);font-weight:300;font-style:italic;line-height:1.75;color:rgba(245,239,230,.58);margin:0 0 18px;">
+          <em style="color:rgba(201,168,76,0.70);">Perfect for you if…</em> ${r.pfy}
+        </p>
         <div style="text-align:center;">
           <a href="https://www.skool.com/the-awakening-portal-6413/plans?utm_campaign=skool_link_classroom&utm_content=86aad7ea6e63411f92b8889e5da718db" target="_blank" rel="noopener noreferrer" class="cta-solid" style="display:inline-flex;">
-            Join The Diagnostics &#9658;
+            Start Decoding &#9658;
           </a>
         </div>
       </article>
@@ -707,14 +717,14 @@ function showResult(name,forcedType){
       <div style="max-width:520px;margin:20px auto 0;display:flex;gap:12px;flex-wrap:wrap;">
 
         <!-- Free option -->
-        <div style="flex:1;min-width:180px;border:1px solid rgba(201,168,76,0.22);border-radius:12px;padding:18px 20px;background:hsl(30 25% 5%);text-align:left;">
-          <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:rgba(201,168,76,0.50);margin-bottom:8px;">🦋 Free — Re-Awakening Portal</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(12px,1.7vw,14px);font-weight:300;line-height:1.85;color:rgba(245,239,230,.55);margin:0 0 14px;">
-            ✔ Monthly Decode the Matrix™ LIVE<br>
-            ✔ Find Your #1 Hidden Block<br>
-            ✔ 5-Minute Anchor Ritual<br>
-            ✔ Community &amp; Challenges<br>
-            ✔ Free Tools &amp; Resources
+        <div style="flex:1;min-width:180px;border:1px solid rgba(201,168,76,0.32);border-radius:12px;padding:18px 20px;background:hsl(30 25% 6%);text-align:left;">
+          <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(201,168,76,0.70);margin-bottom:8px;">🦋 Free — Re-Awakening Portal</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(12px,1.7vw,14px);font-weight:300;color:rgba(245,239,230,.68);display:flex;flex-direction:column;gap:5px;margin:0 0 14px;">
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>Monthly Decode the Matrix™ LIVE</span></div>
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>Find Your #1 Hidden Block</span></div>
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>5-Minute Anchor Ritual</span></div>
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>Community &amp; Challenges</span></div>
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>Free Tools &amp; Resources</span></div>
           </div>
           <a href="https://www.skool.com/the-awakening-portal-6413/plans?utm_campaign=skool_link_classroom&utm_content=86aad7ea6e63411f92b8889e5da718db" target="_blank" rel="noopener noreferrer" style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:rgba(201,168,76,0.65);text-decoration:none;">
             Join Free &#9658;
@@ -722,14 +732,14 @@ function showResult(name,forcedType){
         </div>
 
         <!-- Inner Circle option -->
-        <div style="flex:1;min-width:180px;border:1px solid rgba(201,168,76,0.22);border-radius:12px;padding:18px 20px;background:hsl(30 25% 5%);text-align:left;">
-          <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:rgba(201,168,76,0.50);margin-bottom:8px;">✨ VIP — The Inner Circle &nbsp;<span style="color:rgba(201,168,76,0.65);">$99/mo</span></div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(12px,1.7vw,14px);font-weight:300;line-height:1.85;color:rgba(245,239,230,.55);margin:0 0 14px;">
-            ✔ Everything in 🔬 The Diagnostics<br>
-            ✔ Monthly Group Inner Circle Reset™ LIVE<br>
-            ✔ Weekly Check-ins + Priority Support<br>
-            ✔ Transformation Vault<br>
-            <span style="color:rgba(201,168,76,0.60);font-style:italic;">⭐ Annual: 1:1 Source Code Reset™ ($497 value)</span>
+        <div style="flex:1;min-width:180px;border:1px solid rgba(201,168,76,0.32);border-radius:12px;padding:18px 20px;background:hsl(30 25% 6%);text-align:left;">
+          <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(201,168,76,0.70);margin-bottom:8px;">✨ VIP — The Inner Circle &nbsp;<span style="color:rgba(201,168,76,0.85);">$99/mo</span></div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(12px,1.7vw,14px);font-weight:300;color:rgba(245,239,230,.68);display:flex;flex-direction:column;gap:5px;margin:0 0 14px;">
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>Everything in 🔬 The Diagnostics</span></div>
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>Inner Circle Reset™ LIVE</span></div>
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>Weekly Check-ins + Priority Support</span></div>
+            <div style="display:flex;gap:7px;align-items:baseline;">✔<span>Transformation Vault</span></div>
+            <div style="color:rgba(201,168,76,0.75);font-style:italic;">⭐ Annual: 1:1 Source Code Reset™ ($497 value)</div>
           </div>
           <a href="https://www.skool.com/the-awakening-portal-6413/plans?utm_campaign=skool_link_classroom&utm_content=86aad7ea6e63411f92b8889e5da718db" target="_blank" rel="noopener noreferrer" style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:rgba(201,168,76,0.65);text-decoration:none;">
             Join The Inner Circle &#9658;
@@ -738,12 +748,9 @@ function showResult(name,forcedType){
 
       </div>
 
-      <!-- Compare all / Founder note -->
+      <!-- Founder note -->
       <div style="max-width:520px;margin:18px auto 0;text-align:center;">
-        <a href="https://www.skool.com/the-awakening-portal-6413/plans?utm_campaign=skool_link_classroom&utm_content=86aad7ea6e63411f92b8889e5da718db" target="_blank" rel="noopener noreferrer" style="font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(201,168,76,0.42);text-decoration:none;">
-          Compare all membership paths &#8599;
-        </a>
-        <div style="margin-top:10px;font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:rgba(245,239,230,.30);">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:rgba(245,239,230,.30);">
           🌟 Founder pricing — first 5 members only &nbsp;·&nbsp; rises to $147/yr after founding spots fill
         </div>
       </div>
